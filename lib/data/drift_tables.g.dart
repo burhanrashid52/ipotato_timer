@@ -3,13 +3,11 @@
 part of 'drift_tables.dart';
 
 // ignore_for_file: type=lint
-class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
+class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskTable> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-
   $TasksTable(this.attachedDatabase, [this._alias]);
-
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -42,19 +40,15 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   late final GeneratedColumn<int> elapsedDuration = GeneratedColumn<int>(
       'elapsed_duration', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-
   @override
   List<GeneratedColumn> get $columns =>
       [id, title, description, duration, elapsedDuration];
-
   @override
   String get aliasedName => _alias ?? 'tasks';
-
   @override
   String get actualTableName => 'tasks';
-
   @override
-  VerificationContext validateIntegrity(Insertable<Task> instance,
+  VerificationContext validateIntegrity(Insertable<TaskTable> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -90,11 +84,10 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
-  Task map(Map<String, dynamic> data, {String? tablePrefix}) {
+  TaskTable map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Task(
+    return TaskTable(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       title: attachedDatabase.typeMapping
@@ -114,20 +107,18 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   }
 }
 
-class Task extends DataClass implements Insertable<Task> {
+class TaskTable extends DataClass implements Insertable<TaskTable> {
   final int id;
   final String title;
   final String? description;
   final int duration;
   final int? elapsedDuration;
-
-  const Task(
+  const TaskTable(
       {required this.id,
       required this.title,
       this.description,
       required this.duration,
       this.elapsedDuration});
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -157,10 +148,10 @@ class Task extends DataClass implements Insertable<Task> {
     );
   }
 
-  factory Task.fromJson(Map<String, dynamic> json,
+  factory TaskTable.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Task(
+    return TaskTable(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String?>(json['description']),
@@ -168,7 +159,6 @@ class Task extends DataClass implements Insertable<Task> {
       elapsedDuration: serializer.fromJson<int?>(json['elapsedDuration']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -181,13 +171,13 @@ class Task extends DataClass implements Insertable<Task> {
     };
   }
 
-  Task copyWith(
+  TaskTable copyWith(
           {int? id,
           String? title,
           Value<String?> description = const Value.absent(),
           int? duration,
           Value<int?> elapsedDuration = const Value.absent()}) =>
-      Task(
+      TaskTable(
         id: id ?? this.id,
         title: title ?? this.title,
         description: description.present ? description.value : this.description,
@@ -196,10 +186,9 @@ class Task extends DataClass implements Insertable<Task> {
             ? elapsedDuration.value
             : this.elapsedDuration,
       );
-
   @override
   String toString() {
-    return (StringBuffer('Task(')
+    return (StringBuffer('TaskTable(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
@@ -212,11 +201,10 @@ class Task extends DataClass implements Insertable<Task> {
   @override
   int get hashCode =>
       Object.hash(id, title, description, duration, elapsedDuration);
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Task &&
+      (other is TaskTable &&
           other.id == this.id &&
           other.title == this.title &&
           other.description == this.description &&
@@ -224,13 +212,12 @@ class Task extends DataClass implements Insertable<Task> {
           other.elapsedDuration == this.elapsedDuration);
 }
 
-class TasksCompanion extends UpdateCompanion<Task> {
+class TasksCompanion extends UpdateCompanion<TaskTable> {
   final Value<int> id;
   final Value<String> title;
   final Value<String?> description;
   final Value<int> duration;
   final Value<int?> elapsedDuration;
-
   const TasksCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -238,7 +225,6 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.duration = const Value.absent(),
     this.elapsedDuration = const Value.absent(),
   });
-
   TasksCompanion.insert({
     this.id = const Value.absent(),
     required String title,
@@ -247,8 +233,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.elapsedDuration = const Value.absent(),
   })  : title = Value(title),
         duration = Value(duration);
-
-  static Insertable<Task> custom({
+  static Insertable<TaskTable> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? description,
@@ -316,11 +301,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   late final $TasksTable tasks = $TasksTable(this);
-
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
-
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [tasks];
 }

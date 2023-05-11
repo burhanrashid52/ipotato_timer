@@ -9,7 +9,7 @@ part 'drift_tables.g.dart';
 
 const DATABASE_VERSION = 1;
 
-@DataClassName('Task')
+@DataClassName('TaskTable')
 class Tasks extends Table {
   IntColumn get id => integer().autoIncrement()();
 
