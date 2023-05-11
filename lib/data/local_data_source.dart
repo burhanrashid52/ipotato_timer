@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:ipotato_timer/data/drift_tables.dart';
 
 class LocalDataSource {
@@ -19,10 +20,9 @@ class LocalDataSource {
   }
 
   Future<int> addTask(Task task) {
-    final taskTable = TaskTable(
-      id: 0,
+    final taskTable = TasksCompanion.insert(
       title: task.title,
-      description: task.description,
+      description: Value(task.description),
       duration: 0,
     );
     return _db.into(_db.tasks).insert(taskTable);
@@ -40,6 +40,6 @@ class Task {
 
   Task({
     required this.title,
-    required this.description,
+    this.description,
   });
 }
