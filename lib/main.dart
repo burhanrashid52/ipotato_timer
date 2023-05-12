@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ipotato_timer/add_task.dart';
 import 'package:ipotato_timer/data/data_source.dart';
+import 'package:ipotato_timer/widget/countdown_timer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,23 +40,58 @@ class HomePage extends StatelessWidget {
               itemCount: tasks.length,
               itemBuilder: (context, index) {
                 final task = tasks[index];
-                return ListTile(
-                  leading: IconButton(
-                    icon: const Icon(Icons.play_arrow),
-                    onPressed: () {
-                      repository.startTask(task.id);
-                    },
-                  ),
-                  title: Text(task.title),
-                  subtitle: Text(
-                    "${task.isRunning ? "Running" : "Pause"} - ${task.isFinished ? "Finish" : "Not Finish"} - Elapsed ${task.elapsedDuration.inSeconds.toString()}",
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.pause),
-                    onPressed: () {
-                      repository.pauseTask(task.id);
-                    },
-                  ),
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        if (task.isFinished) ...[
+                          const Expanded(
+                            child: Text('FINISHED'),
+                          ),
+                        ] else ...[
+                          Expanded(
+                            child: CountdownTimer(
+                              key: ValueKey(
+                                "${task.id}-${task.elapsedDuration.inSeconds}",
+                              ),
+                              duration: task.duration,
+                              elapsedTime: task.elapsedDuration,
+                              stop: !task.isRunning,
+                              onFinished: () {
+                                repository.markAsFinished(
+                                  task.id,
+                                  task.duration,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                        if (task.isRunning) ...[
+                          IconButton(
+                            icon: const Icon(Icons.play_arrow),
+                            onPressed: () {
+                              repository.startTask(task.id);
+                            },
+                          ),
+                        ] else ...[
+                          IconButton(
+                            icon: const Icon(Icons.pause),
+                            onPressed: () {
+                              repository.pauseTask(task.id);
+                            },
+                          ),
+                        ],
+                        IconButton(
+                          icon: const Icon(Icons.stop),
+                          onPressed: () {
+                            repository.stopTask(task.id);
+                          },
+                        )
+                      ],
+                    ),
+                    Text(task.title)
+                  ],
                 );
               },
             );

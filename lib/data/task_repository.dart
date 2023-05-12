@@ -50,4 +50,12 @@ class TaskRepository {
   Future<int> stopTask(int id) {
     return _localDataSource.removeTask(id);
   }
+
+  Future<void> markAsFinished(int id, Duration duration) async {
+    await _localDataSource.updateTask(
+      id,
+      startedAt: 0,
+      elapsed: duration.inMilliseconds,
+    );
+  }
 }
