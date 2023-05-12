@@ -17,22 +17,27 @@ class TaskRepository {
   Future<void> startTask(int id) async {
     final now = clock.now();
     final milliseconds = now.millisecondsSinceEpoch;
-    await _localDataSource.updateStartAt(id, milliseconds);
+    await _localDataSource.updateTask(id, startedAt: milliseconds);
   }
 
   Future<Duration> pauseTask(int id) async {
     final task = await _localDataSource.getTask(id);
     if (task != null) {
-      final diff = clock.now().difference(task.startedAt!);
-      final totalElapsed =
-          diff.inMilliseconds + task.elapsedDuration.inMilliseconds;
-      await _localDataSource.updateStartAt(
-        id,
-        0,
-        elapsed: totalElapsed,
-      );
-      return Duration(milliseconds: totalElapsed);
+      if (task.startedAt != null) {
+        final duration = _getTotalElapsedDuration(task);
+        await _localDataSource.updateTask(id, elapsed: duration.inMilliseconds);
+        return duration;
+      }
+      //TODO: Handle errors on UI
+      throw 'Cannot pause task that has not been started';
     }
     throw 'Task not found';
+  }
+
+  Duration _getTotalElapsedDuration(Task task) {
+    final currentElapsed = clock.now().difference(task.startedAt!);
+    final prevElapsed = task.elapsedDuration.inMilliseconds;
+    final totalElapsed = currentElapsed.inMilliseconds + prevElapsed;
+    return Duration(milliseconds: totalElapsed);
   }
 }

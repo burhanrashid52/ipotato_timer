@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ipotato_timer/add_task.dart';
 import 'package:ipotato_timer/data/drift_tables.dart';
 import 'package:ipotato_timer/data/local_data_source.dart';
+import 'package:ipotato_timer/data/task_repository.dart';
 
-final localDataSource = LocalDataSource(AppDatabase());
+final repository = TaskRepository(
+  LocalDataSource(
+    AppDatabase(),
+  ),
+);
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +39,7 @@ class HomePage extends StatelessWidget {
         title: const Text('iPotato Timer'),
       ),
       body: StreamBuilder<List<Task>>(
-        stream: localDataSource.watchTasks(),
+        stream: repository.watchTasks(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final tasks = snapshot.data!;

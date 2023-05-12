@@ -29,7 +29,7 @@ class AddTaskPage extends StatelessWidget {
               onPressed: textController.text.isEmpty
                   ? null
                   : () {
-                      localDataSource.addTask(
+                      repository.addTask(
                         Task(
                           title: textController.text,
                           duration: const Duration(minutes: 1),

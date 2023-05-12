@@ -4,36 +4,18 @@ import 'package:ipotato_timer/data/drift_tables.dart';
 class LocalDataSource {
   final AppDatabase _db;
 
-  Stream<List<Task>> watchTasks() => _db.select(_db.tasks).watch().map(
-        (items) => items
-            .map(
-              (e) => Task(
-                title: e.title,
-                description: e.description,
-                duration: Duration(seconds: e.duration),
-              ),
-            )
-            .toList(),
-      );
-
   LocalDataSource(this._db);
 
+  Stream<List<Task>> watchTasks() => _selectTask.watch().map(
+        (items) => items.map(Task.fromTable).toList(),
+      );
+
   Future<List<Task>> getTasks() async {
-    final items = await _db.select(_db.tasks).get();
-    return items
-        .map(
-          (e) => Task(
-            title: e.title,
-            description: e.description,
-            duration: Duration(milliseconds: e.duration),
-            elapsedDuration: Duration(milliseconds: e.elapsedDuration ?? 0),
-            startedAt: e.startedAt > 0
-                ? DateTime.fromMillisecondsSinceEpoch(e.startedAt)
-                : null,
-          ),
-        )
-        .toList();
+    return await _selectTask.map(Task.fromTable).get();
   }
+
+  SimpleSelectStatement<$TasksTable, TaskTable> get _selectTask =>
+      _db.select(_db.tasks);
 
   Future<int> addTask(Task task) {
     final taskTable = TasksCompanion.insert(
@@ -51,31 +33,24 @@ class LocalDataSource {
     return _db.delete(_db.tasks).delete(taskTable);
   }
 
-  Future<void> updateStartAt(int id, int millisecond, {int? elapsed}) {
+  Future<void> updateTask(
+    int id, {
+    int startedAt = 0,
+    int? elapsed,
+  }) {
     final taskTable = TasksCompanion(
       id: Value(id),
-      startedAt: Value(millisecond),
+      startedAt: Value(startedAt),
       elapsedDuration: elapsed != null ? Value(elapsed) : const Value.absent(),
     );
-    var update = _db.update(_db.tasks);
-    update.where((e) => e.id.equals(id));
-    return update.write(taskTable);
+    final query = _db.update(_db.tasks)..where((e) => e.id.equals(id));
+    return query.write(taskTable);
   }
 
   Future<Task?> getTask(int id) {
-    final query = _db.select(_db.tasks)..where((t) => t.id.equals(id));
-    var map = query.map(
-      (row) => Task(
-        title: row.title,
-        description: row.description,
-        duration: Duration(milliseconds: row.duration),
-        elapsedDuration: Duration(milliseconds: row.elapsedDuration ?? 0),
-        startedAt: row.startedAt > 0
-            ? DateTime.fromMillisecondsSinceEpoch(row.startedAt)
-            : null,
-      ),
-    );
-    return map.getSingleOrNull();
+    final query = _selectTask..where((t) => t.id.equals(id));
+    final result = query.map(Task.fromTable);
+    return result.getSingleOrNull();
   }
 }
 
@@ -85,6 +60,18 @@ class Task {
   final String? description;
   final DateTime? startedAt;
   final Duration elapsedDuration;
+
+  factory Task.fromTable(TaskTable table) {
+    return Task(
+      title: table.title,
+      description: table.description,
+      duration: Duration(milliseconds: table.duration),
+      elapsedDuration: Duration(milliseconds: table.elapsedDuration ?? 0),
+      startedAt: table.startedAt > 0
+          ? DateTime.fromMillisecondsSinceEpoch(table.startedAt)
+          : null,
+    );
+  }
 
   Task({
     required this.title,
