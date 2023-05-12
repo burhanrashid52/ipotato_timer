@@ -20,11 +20,16 @@ class Tasks extends Table {
   IntColumn get duration => integer()();
 
   IntColumn get elapsedDuration => integer().nullable()();
+
+  IntColumn get startedAt => integer().nullable()();
 }
 
 @DriftDatabase(tables: [Tasks])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase({NativeDatabase? database})
+      : super(
+          database ?? _openConnection(),
+        );
 
   @override
   int get schemaVersion => DATABASE_VERSION;

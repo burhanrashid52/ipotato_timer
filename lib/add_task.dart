@@ -3,6 +3,8 @@ import 'package:ipotato_timer/main.dart';
 
 import 'data/local_data_source.dart';
 
+//1. Write a test to insert item at local data source
+//2. Write a test for local data source to check if its stored in database
 class AddTaskPage extends StatelessWidget {
   AddTaskPage({Key? key}) : super(key: key);
 
@@ -27,7 +29,10 @@ class AddTaskPage extends StatelessWidget {
                   ? null
                   : () {
                       localDataSource.addTask(
-                        Task(title: textController.text),
+                        Task(
+                          title: textController.text,
+                          duration: const Duration(minutes: 1),
+                        ),
                       );
                       Navigator.pop(context);
                     },
