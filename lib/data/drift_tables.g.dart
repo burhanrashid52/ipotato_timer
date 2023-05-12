@@ -44,8 +44,8 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskTable> {
       const VerificationMeta('startedAt');
   @override
   late final GeneratedColumn<int> startedAt = GeneratedColumn<int>(
-      'started_at', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      'started_at', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [id, title, description, duration, elapsedDuration, startedAt];
@@ -88,6 +88,8 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskTable> {
     if (data.containsKey('started_at')) {
       context.handle(_startedAtMeta,
           startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta));
+    } else if (isInserting) {
+      context.missing(_startedAtMeta);
     }
     return context;
   }
@@ -109,7 +111,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskTable> {
       elapsedDuration: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}elapsed_duration']),
       startedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}started_at']),
+          .read(DriftSqlType.int, data['${effectivePrefix}started_at'])!,
     );
   }
 
@@ -125,14 +127,14 @@ class TaskTable extends DataClass implements Insertable<TaskTable> {
   final String? description;
   final int duration;
   final int? elapsedDuration;
-  final int? startedAt;
+  final int startedAt;
   const TaskTable(
       {required this.id,
       required this.title,
       this.description,
       required this.duration,
       this.elapsedDuration,
-      this.startedAt});
+      required this.startedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -145,9 +147,7 @@ class TaskTable extends DataClass implements Insertable<TaskTable> {
     if (!nullToAbsent || elapsedDuration != null) {
       map['elapsed_duration'] = Variable<int>(elapsedDuration);
     }
-    if (!nullToAbsent || startedAt != null) {
-      map['started_at'] = Variable<int>(startedAt);
-    }
+    map['started_at'] = Variable<int>(startedAt);
     return map;
   }
 
@@ -162,9 +162,7 @@ class TaskTable extends DataClass implements Insertable<TaskTable> {
       elapsedDuration: elapsedDuration == null && nullToAbsent
           ? const Value.absent()
           : Value(elapsedDuration),
-      startedAt: startedAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(startedAt),
+      startedAt: Value(startedAt),
     );
   }
 
@@ -177,7 +175,7 @@ class TaskTable extends DataClass implements Insertable<TaskTable> {
       description: serializer.fromJson<String?>(json['description']),
       duration: serializer.fromJson<int>(json['duration']),
       elapsedDuration: serializer.fromJson<int?>(json['elapsedDuration']),
-      startedAt: serializer.fromJson<int?>(json['startedAt']),
+      startedAt: serializer.fromJson<int>(json['startedAt']),
     );
   }
   @override
@@ -189,7 +187,7 @@ class TaskTable extends DataClass implements Insertable<TaskTable> {
       'description': serializer.toJson<String?>(description),
       'duration': serializer.toJson<int>(duration),
       'elapsedDuration': serializer.toJson<int?>(elapsedDuration),
-      'startedAt': serializer.toJson<int?>(startedAt),
+      'startedAt': serializer.toJson<int>(startedAt),
     };
   }
 
@@ -199,7 +197,7 @@ class TaskTable extends DataClass implements Insertable<TaskTable> {
           Value<String?> description = const Value.absent(),
           int? duration,
           Value<int?> elapsedDuration = const Value.absent(),
-          Value<int?> startedAt = const Value.absent()}) =>
+          int? startedAt}) =>
       TaskTable(
         id: id ?? this.id,
         title: title ?? this.title,
@@ -208,7 +206,7 @@ class TaskTable extends DataClass implements Insertable<TaskTable> {
         elapsedDuration: elapsedDuration.present
             ? elapsedDuration.value
             : this.elapsedDuration,
-        startedAt: startedAt.present ? startedAt.value : this.startedAt,
+        startedAt: startedAt ?? this.startedAt,
       );
   @override
   String toString() {
@@ -244,7 +242,7 @@ class TasksCompanion extends UpdateCompanion<TaskTable> {
   final Value<String?> description;
   final Value<int> duration;
   final Value<int?> elapsedDuration;
-  final Value<int?> startedAt;
+  final Value<int> startedAt;
   const TasksCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -259,9 +257,10 @@ class TasksCompanion extends UpdateCompanion<TaskTable> {
     this.description = const Value.absent(),
     required int duration,
     this.elapsedDuration = const Value.absent(),
-    this.startedAt = const Value.absent(),
+    required int startedAt,
   })  : title = Value(title),
-        duration = Value(duration);
+        duration = Value(duration),
+        startedAt = Value(startedAt);
   static Insertable<TaskTable> custom({
     Expression<int>? id,
     Expression<String>? title,
@@ -286,7 +285,7 @@ class TasksCompanion extends UpdateCompanion<TaskTable> {
       Value<String?>? description,
       Value<int>? duration,
       Value<int?>? elapsedDuration,
-      Value<int?>? startedAt}) {
+      Value<int>? startedAt}) {
     return TasksCompanion(
       id: id ?? this.id,
       title: title ?? this.title,

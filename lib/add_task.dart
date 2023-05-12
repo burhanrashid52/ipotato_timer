@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:ipotato_timer/main.dart';
 
@@ -32,6 +33,7 @@ class AddTaskPage extends StatelessWidget {
                         Task(
                           title: textController.text,
                           duration: const Duration(minutes: 1),
+                          startedAt: clock.now(),
                         ),
                       );
                       Navigator.pop(context);

@@ -21,7 +21,7 @@ class Tasks extends Table {
 
   IntColumn get elapsedDuration => integer().nullable()();
 
-  IntColumn get startedAt => integer().nullable()();
+  IntColumn get startedAt => integer()();
 }
 
 @DriftDatabase(tables: [Tasks])

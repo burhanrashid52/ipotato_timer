@@ -19,4 +19,20 @@ class TaskRepository {
     final milliseconds = now.millisecondsSinceEpoch;
     await _localDataSource.updateStartAt(id, milliseconds);
   }
+
+  Future<Duration> pauseTask(int id) async {
+    final task = await _localDataSource.getTask(id);
+    if (task != null) {
+      final diff = clock.now().difference(task.startedAt!);
+      final totalElapsed =
+          diff.inMilliseconds + task.elapsedDuration.inMilliseconds;
+      await _localDataSource.updateStartAt(
+        id,
+        0,
+        elapsed: totalElapsed,
+      );
+      return Duration(milliseconds: totalElapsed);
+    }
+    throw 'Task not found';
+  }
 }

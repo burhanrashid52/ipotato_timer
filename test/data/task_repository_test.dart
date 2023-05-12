@@ -3,7 +3,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/data/drift_tables.dart';
 import 'package:ipotato_timer/data/local_data_source.dart';
-import 'package:ipotato_timer/data/task_respository.dart';
+import 'package:ipotato_timer/data/task_repository.dart';
 
 void main() {
   late AppDatabase database;
@@ -15,7 +15,7 @@ void main() {
   });
 
   group('Task Tracker', () {
-    test('Add task in db', () async {
+    test('Return task when add via repository', () async {
       final repo = TaskRepository(localDataSource);
       final task = Task(
         title: 'T1',
@@ -31,7 +31,7 @@ void main() {
       expect(tasks[0].duration.inSeconds, 5);
     });
 
-    test('When task is played add the start time in db', () async {
+    test('Return start time from db when task is started', () async {
       final repo = TaskRepository(localDataSource);
       final task = Task(title: 'T1', duration: const Duration(minutes: 1));
       final id = await localDataSource.addTask(task);
@@ -43,6 +43,39 @@ void main() {
       final tasks = await localDataSource.getTasks();
       expect(tasks.first.title, 'T1');
       expect(tasks.first.startedAt.toString(), '2017-09-07 17:30:00.000');
+    });
+
+    test('Return elapsed time when task is paused than', () async {
+      final repo = TaskRepository(localDataSource);
+      final task = Task(
+        title: 'T1',
+        duration: const Duration(seconds: 10),
+        startedAt: DateTime(2017, 9, 7, 17, 30, 9),
+      );
+      final id = await localDataSource.addTask(task);
+
+      await runFakeClock(DateTime(2017, 9, 7, 17, 30, 11), () async {
+        final elapsedTime = await repo.pauseTask(id);
+        expect(elapsedTime.inSeconds, 2);
+      });
+    });
+
+    test(
+        'Return total elapsed time from previous value when task is paused than',
+        () async {
+      final repo = TaskRepository(localDataSource);
+      final task = Task(
+        title: 'T1',
+        duration: const Duration(seconds: 10),
+        elapsedDuration: const Duration(seconds: 5),
+        startedAt: DateTime(2017, 9, 7, 17, 30, 9),
+      );
+      final id = await localDataSource.addTask(task);
+
+      await runFakeClock(DateTime(2017, 9, 7, 17, 30, 11), () async {
+        final elapsedTime = await repo.pauseTask(id);
+        expect(elapsedTime.inSeconds, 7);
+      });
     });
   });
 
