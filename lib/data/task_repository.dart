@@ -40,4 +40,8 @@ class TaskRepository {
     final totalElapsed = currentElapsed.inMilliseconds + prevElapsed;
     return Duration(milliseconds: totalElapsed);
   }
+
+  Future<int> stopTask(int id) {
+    return _localDataSource.removeTask(id);
+  }
 }

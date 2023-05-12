@@ -31,6 +31,7 @@ class AddTaskPage extends StatelessWidget {
                   : () {
                       repository.addTask(
                         Task(
+                          id: 0,
                           title: textController.text,
                           duration: const Duration(minutes: 1),
                           startedAt: clock.now(),

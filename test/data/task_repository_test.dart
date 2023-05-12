@@ -18,6 +18,7 @@ void main() {
     test('Return task when add via repository', () async {
       final repo = TaskRepository(localDataSource);
       final task = Task(
+        id: 0,
         title: 'T1',
         description: 'D1',
         duration: const Duration(seconds: 5),
@@ -33,7 +34,11 @@ void main() {
 
     test('Return start time from db when task is started', () async {
       final repo = TaskRepository(localDataSource);
-      final task = Task(title: 'T1', duration: const Duration(minutes: 1));
+      final task = Task(
+        id: 0,
+        title: 'T1',
+        duration: const Duration(minutes: 1),
+      );
       final id = await localDataSource.addTask(task);
 
       await runFakeClock(DateTime(2017, 9, 7, 17, 30), () async {
@@ -48,6 +53,7 @@ void main() {
     test('Return elapsed time when task is paused than', () async {
       final repo = TaskRepository(localDataSource);
       final task = Task(
+        id: 0,
         title: 'T1',
         duration: const Duration(seconds: 10),
         startedAt: DateTime(2017, 9, 7, 17, 30, 9),
@@ -65,6 +71,7 @@ void main() {
         () async {
       final repo = TaskRepository(localDataSource);
       final task = Task(
+        id: 0,
         title: 'T1',
         duration: const Duration(seconds: 10),
         elapsedDuration: const Duration(seconds: 5),
@@ -76,6 +83,32 @@ void main() {
         final elapsedTime = await repo.pauseTask(id);
         expect(elapsedTime.inSeconds, 7);
       });
+    });
+    test('Delete item when stop', () async {
+      final repo = TaskRepository(localDataSource);
+      final task1 = Task(id: 0, title: 'T1', duration: Duration.zero);
+      final task2 = Task(id: 0, title: 'T2', duration: Duration.zero);
+      final id1 = await localDataSource.addTask(task1);
+      final id2 = await localDataSource.addTask(task2);
+
+      final beforeTask = await localDataSource.watchTasks().first;
+      expect(beforeTask.length, 2);
+
+      final id = await repo.stopTask(id1);
+      expect(id, id1);
+
+      final afterTask = await localDataSource.watchTasks().first;
+      expect(afterTask.length, 1);
+      expect(afterTask.first.id, id2);
+    });
+
+    test('Return id zero on delete unknown task', () async {
+      final repo = TaskRepository(localDataSource);
+      final task = Task(id: 0, title: 'T1', duration: Duration.zero);
+      await localDataSource.addTask(task);
+
+      final id = await repo.stopTask(42);
+      expect(id, 0);
     });
   });
 

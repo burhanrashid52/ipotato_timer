@@ -55,6 +55,7 @@ class LocalDataSource {
 }
 
 class Task {
+  final int id;
   final String title;
   final Duration duration;
   final String? description;
@@ -63,6 +64,7 @@ class Task {
 
   factory Task.fromTable(TaskTable table) {
     return Task(
+      id: table.id,
       title: table.title,
       description: table.description,
       duration: Duration(milliseconds: table.duration),
@@ -74,6 +76,7 @@ class Task {
   }
 
   Task({
+    required this.id,
     required this.title,
     required this.duration,
     this.description,
