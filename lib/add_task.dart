@@ -1,11 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
-import 'package:ipotato_timer/main.dart';
+import 'package:ipotato_timer/data/data_source.dart';
 
-import 'data/local_data_source.dart';
-
-//1. Write a test to insert item at local data source
-//2. Write a test for local data source to check if its stored in database
 class AddTaskPage extends StatelessWidget {
   AddTaskPage({Key? key}) : super(key: key);
 

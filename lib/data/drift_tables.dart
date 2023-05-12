@@ -26,10 +26,9 @@ class Tasks extends Table {
 
 @DriftDatabase(tables: [Tasks])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase({NativeDatabase? database})
-      : super(
-          database ?? _openConnection(),
-        );
+  AppDatabase({
+    NativeDatabase? database,
+  }) : super(database ?? _openConnection());
 
   @override
   int get schemaVersion => DATABASE_VERSION;

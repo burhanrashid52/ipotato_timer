@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ipotato_timer/add_task.dart';
-import 'package:ipotato_timer/data/drift_tables.dart';
-import 'package:ipotato_timer/data/local_data_source.dart';
-import 'package:ipotato_timer/data/task_repository.dart';
-
-final repository = TaskRepository(
-  LocalDataSource(
-    AppDatabase(),
-  ),
-);
+import 'package:ipotato_timer/data/data_source.dart';
 
 void main() {
   runApp(const MyApp());
