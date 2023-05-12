@@ -83,4 +83,8 @@ class Task {
     this.startedAt,
     this.elapsedDuration = Duration.zero,
   });
+
+  bool get isFinished => elapsedDuration >= duration;
+
+  bool get isRunning => startedAt != null && !isFinished;
 }

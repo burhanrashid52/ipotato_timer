@@ -48,8 +48,22 @@ class HomePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final task = tasks[index];
                 return ListTile(
+                  leading: IconButton(
+                    icon: const Icon(Icons.play_arrow),
+                    onPressed: () {
+                      repository.startTask(task.id);
+                    },
+                  ),
                   title: Text(task.title),
-                  subtitle: Text(task.description ?? ''),
+                  subtitle: Text(
+                    "${task.isRunning ? "Running" : "Pause"} - ${task.isFinished ? "Finish" : "Not Finish"} - Elapsed ${task.elapsedDuration.inSeconds.toString()}",
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.pause),
+                    onPressed: () {
+                      repository.pauseTask(task.id);
+                    },
+                  ),
                 );
               },
             );
