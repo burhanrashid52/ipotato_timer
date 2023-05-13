@@ -66,13 +66,29 @@ class TaskCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (task.isFinished) ...[
               const Text('FINISHED'),
             ] else ...[
               TaskTimerToggle(task: task),
             ],
-            Text(task.title)
+            const SizedBox(height: 16.0),
+            Text(
+              task.title,
+              style: context.theme.textTheme.titleLarge?.copyWith(
+                color: context.theme.colorScheme.secondary,
+              ),
+            ),
+            if (task.description != null && task.description!.isNotEmpty) ...[
+              const SizedBox(height: 4.0),
+              Text(
+                task.description!,
+                style: context.theme.textTheme.bodyMedium?.copyWith(
+                  color: context.theme.colorScheme.primary,
+                ),
+              ),
+            ]
           ],
         ),
       ),
