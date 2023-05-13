@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ipotato_timer/extension.dart';
 
 class CountdownTimer extends StatefulWidget {
   final Duration duration;
@@ -34,7 +35,12 @@ class _CountdownTimerState extends State<CountdownTimer> {
   @override
   Widget build(BuildContext context) {
     final remainingTime = _toHHMMSS();
-    return Text(remainingTime);
+    return Text(
+      remainingTime,
+      style: context.theme.textTheme.headlineLarge?.copyWith(
+        color: context.theme.primaryColor,
+      ),
+    );
   }
 
   void _updateTimer(Timer timer) {
