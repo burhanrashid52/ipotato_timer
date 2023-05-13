@@ -29,6 +29,16 @@ class TaskRepository {
       );
   }
 
+  ({bool isValid, String errMsg}) validate(Task task) {
+    if (task.title.isEmpty) {
+      return (isValid: false, errMsg: 'Title cannot be empty');
+    }
+    if (task.duration.inSeconds == 0) {
+      return (isValid: false, errMsg: 'Duration cannot be 0');
+    }
+    return (isValid: true, errMsg: '');
+  }
+
   Future<int> addTask(Task task) {
     //TODO: Add validation for task here
     return _localDataSource.addTask(task);

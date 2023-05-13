@@ -1,6 +1,20 @@
 import 'package:clock/clock.dart';
 import 'package:fake_async/fake_async.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/data/data_source.dart';
+
+extension WidgetTesterExt on WidgetTester {
+  Future<void> tapOnText(String text) async {
+    await tap(find.text(text));
+    await pumpAndSettle();
+  }
+
+  Future<void> enterTextKey(String fieldKey, String givenText) async {
+    await enterText(find.byKey(ValueKey(fieldKey)), givenText);
+    await pumpAndSettle();
+  }
+}
 
 class TaskDataBuilder {
   final int _id;
