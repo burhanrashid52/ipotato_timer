@@ -63,34 +63,48 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: context.theme.colorScheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (task.isFinished) ...[
-              const Text('FINISHED'),
-            ] else ...[
-              TaskTimerToggle(task: task),
-            ],
-            const SizedBox(height: 16.0),
-            Text(
-              task.title,
-              style: context.theme.textTheme.titleLarge?.copyWith(
-                color: context.theme.colorScheme.secondary,
-              ),
-            ),
-            if (task.description != null && task.description!.isNotEmpty) ...[
-              const SizedBox(height: 4.0),
-              Text(
-                task.description!,
-                style: context.theme.textTheme.bodyMedium?.copyWith(
-                  color: context.theme.colorScheme.primary,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (task.isFinished) ...[
+                  const TaskFinished(),
+                ] else ...[
+                  TaskTimerToggle(task: task),
+                ],
+                const SizedBox(height: 16.0),
+                Text(
+                  task.title,
+                  style: context.theme.textTheme.titleLarge?.copyWith(
+                    color: context.theme.colorScheme.secondary,
+                  ),
                 ),
-              ),
-            ]
+                if (task.description != null &&
+                    task.description!.isNotEmpty) ...[
+                  const SizedBox(height: 4.0),
+                  Text(
+                    task.description!,
+                    style: context.theme.textTheme.bodyMedium?.copyWith(
+                      color: context.theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (task.isFinished) ...[
+            const SizedBox(height: 4.0),
+            MaterialButton(
+              color: context.theme.colorScheme.onTertiaryContainer,
+              child: const Text('MARK COMPLETE'),
+              onPressed: () => repository.stopTask(task.id),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }
@@ -168,6 +182,36 @@ class TaskTimerToggle extends StatelessWidget {
           onPressed: onPressed,
         ),
       ),
+    );
+  }
+}
+
+class TaskFinished extends StatelessWidget {
+  const TaskFinished({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Image.asset(
+          'assets/sound_wave.png',
+          width: 24,
+          height: 24,
+        ),
+        Text(
+          'FINISHED',
+          style: context.theme.textTheme.headlineLarge?.copyWith(
+            color: context.theme.colorScheme.primary,
+          ),
+        ),
+        Image.asset(
+          'assets/sound_wave.png',
+          width: 24,
+          height: 24,
+        ),
+      ],
     );
   }
 }

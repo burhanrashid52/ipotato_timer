@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF006782);
     const secondaryColor = Color(0xFF216C2E);
+    const tertiaryContainer = Color(0xFFE1DFFF);
     return MaterialApp(
       title: 'Potato Timer',
       theme: ThemeData(
@@ -27,10 +28,17 @@ class MyApp extends StatelessWidget {
           cardColor: const Color(0xFFFBFCFE),
         ).copyWith(
           tertiary: const Color(0xFF5B5B7D),
+          tertiaryContainer: tertiaryContainer,
           surface: const Color(0xFFFBFCFE),
           primary: primaryColor,
           secondary: secondaryColor,
           onSecondary: const Color(0xFFFFFFFF),
+        ),
+        buttonTheme: ButtonThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // Change the corner size
+          ),
+          buttonColor: tertiaryContainer,
         ),
         iconTheme: const IconThemeData(
           size: 18,
