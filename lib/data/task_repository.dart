@@ -12,8 +12,22 @@ class TaskRepository {
 
   TaskRepository(this._localDataSource);
 
-  //TODO: sort by finished items first here
-  Stream<List<Task>> watchTasks() => _localDataSource.watchTasks();
+  Stream<List<Task>> watchTasks() =>
+      _localDataSource.watchTasks().map(_sortTaskByFinish);
+
+  List<Task> _sortTaskByFinish(List<Task> tasks) {
+    return tasks
+      ..sort(
+        (a, b) {
+          if (!a.isFinished && b.isFinished) {
+            return 1;
+          } else if (a.isFinished && !b.isFinished) {
+            return -1;
+          }
+          return 0;
+        },
+      );
+  }
 
   Future<int> addTask(Task task) {
     //TODO: Add validation for task here

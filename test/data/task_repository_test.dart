@@ -12,7 +12,7 @@ void main() {
     localDataSource = LocalDataSource(database);
   });
 
-  group('Task Tracker', () {
+  group('Repository CRUD', () {
     test('Return task when add via repository', () async {
       final repo = TaskRepository(localDataSource);
       final task = Task(
@@ -30,6 +30,42 @@ void main() {
       expect(tasks[0].duration.inSeconds, 5);
     });
 
+    test('Return sorted isFinished task first', () async {
+      final repo = TaskRepository(localDataSource);
+      final task1 = Task(
+        id: 0,
+        title: 'T1',
+        description: 'D1',
+        duration: const Duration(seconds: 5),
+      );
+
+      final task2 = Task(
+        id: 0,
+        title: 'T2',
+        description: 'D1',
+        duration: const Duration(seconds: 5),
+        elapsedDuration: const Duration(seconds: 5),
+      );
+
+      final task3 = Task(
+        id: 0,
+        title: 'T3',
+        description: 'D1',
+        duration: const Duration(seconds: 5),
+      );
+
+      await repo.addTask(task1);
+      await repo.addTask(task2);
+      await repo.addTask(task3);
+
+      final tasks = await repo.watchTasks().first;
+      expect(tasks[0].title, 'T2');
+      expect(tasks[1].title, 'T1');
+      expect(tasks[2].title, 'T3');
+    });
+  });
+
+  group('Task Tracker', () {
     test('Return start time from db when task is started', () async {
       final repo = TaskRepository(localDataSource);
       final task = Task(
