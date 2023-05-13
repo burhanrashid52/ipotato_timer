@@ -103,15 +103,8 @@ class HomePage extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddTaskPage(),
-            ),
-          );
-        },
-        tooltip: 'Increment',
+        onPressed: () => AddTaskPage.launchDialog(context),
+        tooltip: 'Add task',
         child: const Icon(Icons.add),
       ),
     );

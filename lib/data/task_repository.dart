@@ -33,7 +33,7 @@ class TaskRepository {
     if (task.title.isEmpty) {
       return (isValid: false, errMsg: 'Title cannot be empty');
     }
-    if (task.duration.inSeconds == 0) {
+    if (task.duration.inMilliseconds == 0) {
       return (isValid: false, errMsg: 'Duration cannot be 0');
     }
     return (isValid: true, errMsg: '');
