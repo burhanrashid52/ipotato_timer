@@ -49,7 +49,6 @@ class TaskRepository {
   }
 
   Future<int> addTask(Task task) {
-    //TODO: Add validation for task here
     return _localDataSource.addTask(task);
   }
 
