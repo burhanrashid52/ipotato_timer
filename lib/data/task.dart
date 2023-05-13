@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:ipotato_timer/data/drift_tables.dart';
 
 class Task {
@@ -33,4 +34,13 @@ class Task {
   bool get isFinished => elapsedDuration.inSeconds >= duration.inSeconds;
 
   bool get isRunning => startedAt != null && !isFinished;
+
+  Duration get totalElapsed {
+    if (startedAt == null) {
+      return elapsedDuration;
+    }
+    final diff = clock.now().difference(startedAt!);
+    final milliseconds = diff.inMilliseconds + elapsedDuration.inMilliseconds;
+    return Duration(milliseconds: milliseconds);
+  }
 }

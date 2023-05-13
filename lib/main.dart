@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'iPotato Timer',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
       home: const HomePage(),
     );
@@ -53,10 +53,10 @@ class HomePage extends StatelessWidget {
                           Expanded(
                             child: CountdownTimer(
                               key: ValueKey(
-                                "${task.id}-${task.elapsedDuration.inSeconds}",
+                                "${task.id}-${task.elapsedDuration.inSeconds}-${task.isRunning}",
                               ),
                               duration: task.duration,
-                              elapsedTime: task.elapsedDuration,
+                              elapsedTime: task.totalElapsed,
                               stop: !task.isRunning,
                               onFinished: () {
                                 repository.markAsFinished(
@@ -69,16 +69,16 @@ class HomePage extends StatelessWidget {
                         ],
                         if (task.isRunning) ...[
                           IconButton(
-                            icon: const Icon(Icons.play_arrow),
+                            icon: const Icon(Icons.pause),
                             onPressed: () {
-                              repository.startTask(task.id);
+                              repository.pauseTask(task.id);
                             },
                           ),
                         ] else ...[
                           IconButton(
-                            icon: const Icon(Icons.pause),
+                            icon: const Icon(Icons.play_arrow),
                             onPressed: () {
-                              repository.pauseTask(task.id);
+                              repository.startTask(task.id);
                             },
                           ),
                         ],

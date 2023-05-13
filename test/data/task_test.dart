@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/data/data_source.dart';
 
+import 'task_repository_test.dart';
+
 void main() {
   group('Tasks', () {
     test(
       'Return isFinished true when elapsed time is more than given duration',
-      () async {
+      () {
         final task = Task(
           id: 0,
           title: '',
@@ -18,7 +20,7 @@ void main() {
 
     test(
       'Return isFinished false when elapsed time is less than given duration',
-      () async {
+      () {
         final task = Task(
           id: 0,
           title: '',
@@ -31,7 +33,7 @@ void main() {
 
     test(
       'Return isFinished true when elapsed time is equal to duration',
-      () async {
+      () {
         final task = Task(
           id: 0,
           title: '',
@@ -44,7 +46,7 @@ void main() {
 
     test(
       'Return isRunning true when we have started time and not finished',
-      () async {
+      () {
         final task = Task(
           id: 0,
           title: '',
@@ -55,8 +57,8 @@ void main() {
       },
     );
     test(
-      'Return isRunning false when we dont have started time',
-      () async {
+      'Return isRunning false when we do not have started time',
+      () {
         final task = Task(
           id: 0,
           title: '',
@@ -67,7 +69,7 @@ void main() {
     );
     test(
       'Return isRunning false when we have started time but finished',
-      () async {
+      () {
         final task = Task(
           id: 0,
           title: '',
@@ -78,5 +80,29 @@ void main() {
         expect(task.isRunning, false);
       },
     );
+  });
+
+  group('Total Elapsed duration', () {
+    test('Return elapsed duration when no start time found', () {
+      final task = Task(
+        id: 0,
+        title: '',
+        duration: const Duration(seconds: 5),
+        elapsedDuration: const Duration(seconds: 2),
+      );
+      expect(task.totalElapsed, const Duration(seconds: 2));
+    });
+    test('Return total elapsed duration when start time found', () {
+      runFakeClock(DateTime(2022, 5, 13, 8, 55), () {
+        final task = Task(
+          id: 0,
+          title: '',
+          duration: const Duration(minutes: 10),
+          elapsedDuration: const Duration(minutes: 2),
+          startedAt: DateTime(2022, 5, 13, 8, 51),
+        );
+        expect(task.totalElapsed, const Duration(minutes: 6));
+      });
+    });
   });
 }
