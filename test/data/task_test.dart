@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/data/data_source.dart';
 
-import 'task_repository_test.dart';
+import '../test_helper.dart';
 
 void main() {
   group('Tasks', () {

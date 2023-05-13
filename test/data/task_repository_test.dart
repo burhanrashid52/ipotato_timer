@@ -3,9 +3,17 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/data/data_source.dart';
 
+import '../test_helper.dart';
+
 void main() {
   late AppDatabase database;
   late LocalDataSource localDataSource;
+  final taskBuilder = TaskDataBuilder(
+    id: 0,
+    title: 'T1',
+    description: 'D1',
+    duration: Duration.zero,
+  );
 
   setUp(() {
     database = AppDatabase(database: NativeDatabase.memory());
@@ -15,14 +23,8 @@ void main() {
   group('Repository CRUD', () {
     test('Return task when add via repository', () async {
       final repo = TaskRepository(localDataSource);
-      final task = Task(
-        id: 0,
-        title: 'T1',
-        description: 'D1',
-        duration: const Duration(seconds: 5),
-      );
-
-      await repo.addTask(task);
+      final task = taskBuilder.duration(const Duration(seconds: 5));
+      await repo.addTask(task.build());
 
       final tasks = await localDataSource.getTasks();
       expect(tasks[0].title, 'T1');
@@ -32,31 +34,21 @@ void main() {
 
     test('Return sorted isFinished task first', () async {
       final repo = TaskRepository(localDataSource);
-      final task1 = Task(
-        id: 0,
-        title: 'T1',
-        description: 'D1',
-        duration: const Duration(seconds: 5),
+      final task = taskBuilder.duration(const Duration(seconds: 5));
+
+      await repo.addTask(task.build());
+
+      await repo.addTask(
+        task
+            .title('T2')
+            .description('D2')
+            .elapsedDuration(const Duration(seconds: 5))
+            .build(),
       );
 
-      final task2 = Task(
-        id: 0,
-        title: 'T2',
-        description: 'D1',
-        duration: const Duration(seconds: 5),
-        elapsedDuration: const Duration(seconds: 5),
+      await repo.addTask(
+        task.title('T3').description('D3').build(),
       );
-
-      final task3 = Task(
-        id: 0,
-        title: 'T3',
-        description: 'D1',
-        duration: const Duration(seconds: 5),
-      );
-
-      await repo.addTask(task1);
-      await repo.addTask(task2);
-      await repo.addTask(task3);
 
       final tasks = await repo.watchTasks().first;
       expect(tasks[0].title, 'T2');
@@ -68,12 +60,9 @@ void main() {
   group('Task Tracker', () {
     test('Return start time from db when task is started', () async {
       final repo = TaskRepository(localDataSource);
-      final task = Task(
-        id: 0,
-        title: 'T1',
-        duration: const Duration(minutes: 1),
-      );
-      final id = await localDataSource.addTask(task);
+      final task = taskBuilder.duration(const Duration(minutes: 1));
+
+      final id = await localDataSource.addTask(task.build());
 
       await runFakeClock(DateTime(2017, 9, 7, 17, 30), () async {
         await repo.startTask(id);
@@ -86,13 +75,11 @@ void main() {
 
     test('Return elapsed time when task is paused than', () async {
       final repo = TaskRepository(localDataSource);
-      final task = Task(
-        id: 0,
-        title: 'T1',
-        duration: const Duration(seconds: 10),
-        startedAt: DateTime(2017, 9, 7, 17, 30, 9),
-      );
-      final id = await localDataSource.addTask(task);
+      final task = taskBuilder
+          .duration(const Duration(seconds: 10))
+          .startedAt(DateTime(2017, 9, 7, 17, 30, 9));
+
+      final id = await localDataSource.addTask(task.build());
 
       await runFakeClock(DateTime(2017, 9, 7, 17, 30, 11), () async {
         final elapsedTime = await repo.pauseTask(id);
@@ -104,14 +91,12 @@ void main() {
         'Return total elapsed time from previous value when task is paused than',
         () async {
       final repo = TaskRepository(localDataSource);
-      final task = Task(
-        id: 0,
-        title: 'T1',
-        duration: const Duration(seconds: 10),
-        elapsedDuration: const Duration(seconds: 5),
-        startedAt: DateTime(2017, 9, 7, 17, 30, 9),
-      );
-      final id = await localDataSource.addTask(task);
+      final task = taskBuilder
+          .duration(const Duration(seconds: 10))
+          .elapsedDuration(const Duration(seconds: 5))
+          .startedAt(DateTime(2017, 9, 7, 17, 30, 9));
+
+      final id = await localDataSource.addTask(task.build());
 
       await runFakeClock(DateTime(2017, 9, 7, 17, 30, 11), () async {
         final elapsedTime = await repo.pauseTask(id);
@@ -120,10 +105,13 @@ void main() {
     });
     test('Delete item when stop', () async {
       final repo = TaskRepository(localDataSource);
-      final task1 = Task(id: 0, title: 'T1', duration: Duration.zero);
-      final task2 = Task(id: 0, title: 'T2', duration: Duration.zero);
-      final id1 = await localDataSource.addTask(task1);
-      final id2 = await localDataSource.addTask(task2);
+
+      final id1 = await localDataSource.addTask(
+        taskBuilder.build(),
+      );
+      final id2 = await localDataSource.addTask(
+        taskBuilder.title('T2').build(),
+      );
 
       final beforeTask = await localDataSource.watchTasks().first;
       expect(beforeTask.length, 2);
@@ -138,8 +126,7 @@ void main() {
 
     test('Return id zero on delete unknown task', () async {
       final repo = TaskRepository(localDataSource);
-      final task = Task(id: 0, title: 'T1', duration: Duration.zero);
-      await localDataSource.addTask(task);
+      await localDataSource.addTask(taskBuilder.build());
 
       final id = await repo.stopTask(42);
       expect(id, 0);
@@ -151,6 +138,4 @@ void main() {
   });
 }
 
-T runFakeClock<T>(DateTime fakeClock, T Function() fn) {
-  return withClock(Clock.fixed(fakeClock), fn);
-}
+

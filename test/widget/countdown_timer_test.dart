@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/widget/countdown_timer.dart';
 
+import '../test_helper.dart';
+
 void main() {
   group('Countdown Timer', () {
     testWidgets('Update timer every second', (tester) async {
@@ -85,24 +87,4 @@ Future<void> _elapseSeconds(
 ) async {
   async.elapse(Duration(seconds: seconds));
   await tester.pumpAndSettle();
-}
-
-/// Runs a callback using FakeAsync.run while continually pumping the
-/// microtask queue. This avoids a deadlock when tests `await` a Future
-/// which queues a microtask that will not be processed unless the queue
-/// is flushed.
-Future<T> runFakeAsync<T>(
-  Future<T> Function(FakeAsync time) f, {
-  DateTime? initialTime,
-}) async {
-  return FakeAsync(
-    initialTime: initialTime,
-  ).run((FakeAsync time) async {
-    var pump = true;
-    final future = f(time).whenComplete(() => pump = false);
-    while (pump) {
-      time.flushMicrotasks();
-    }
-    return future;
-  });
 }
