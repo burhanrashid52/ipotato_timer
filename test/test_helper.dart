@@ -1,8 +1,21 @@
 import 'package:clock/clock.dart';
 import 'package:fake_async/fake_async.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/data/data_source.dart';
+
+extension WidgetExt on Widget {
+  Widget wrapMaterialApp() {
+    return MaterialApp(
+      home: this,
+    );
+  }
+  Widget wrapScaffold() {
+    return Scaffold(
+      body: this,
+    );
+  }
+}
 
 extension WidgetTesterExt on WidgetTester {
   Future<void> tapOnText(String text) async {

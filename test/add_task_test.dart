@@ -1,19 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/add_task.dart';
+import 'package:ipotato_timer/data/data_source.dart';
 
 import 'test_helper.dart';
 
 void main() {
+  setUpAll(() => registerDependencies());
   group('Add Task', () {
     testWidgets(
       'Show error when title is empty',
       (tester) async {
         await tester.runAsync(() async {
           await tester.pumpWidget(
-            const MaterialApp(
-              home: AddTaskPage(),
-            ),
+            const AddTaskPage().wrapScaffold().wrapMaterialApp(),
           );
           await tester.pumpAndSettle();
           await tester.tapOnText('Add Task');
@@ -27,9 +26,7 @@ void main() {
       (tester) async {
         await tester.runAsync(() async {
           await tester.pumpWidget(
-            const MaterialApp(
-              home: AddTaskPage(),
-            ),
+            const AddTaskPage().wrapScaffold().wrapMaterialApp(),
           );
           await tester.pumpAndSettle();
           await tester.enterTextKey('text_field_title', 'Task 1');

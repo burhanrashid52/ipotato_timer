@@ -16,6 +16,8 @@ dependencies:
   path: ^1.8.3
   cupertino_icons: ^1.0.2
   clock: ^1.1.1
+  freezed: ^2.3.3
+  get_it: ^7.6.0
 
 dev_dependencies:
   flutter_test:

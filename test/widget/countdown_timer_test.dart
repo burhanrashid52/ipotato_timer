@@ -1,5 +1,4 @@
 import 'package:fake_async/fake_async.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/widget/countdown_timer.dart';
 
@@ -10,14 +9,10 @@ void main() {
     testWidgets('Update timer every second', (tester) async {
       await runFakeAsync((async) async {
         await tester.pumpWidget(
-          const MaterialApp(
-            home: Scaffold(
-              body: CountdownTimer(
-                duration: Duration(seconds: 60),
-                elapsedTime: Duration(seconds: 29),
-              ),
-            ),
-          ),
+          const CountdownTimer(
+            duration: Duration(seconds: 60),
+            elapsedTime: Duration(seconds: 29),
+          ).wrapScaffold().wrapMaterialApp(),
         );
         await tester.pumpAndSettle();
         expect(find.text('00:00:31'), findsOneWidget);
@@ -33,15 +28,11 @@ void main() {
     testWidgets('Do not update timer when its stopped', (tester) async {
       await runFakeAsync((async) async {
         await tester.pumpWidget(
-          const MaterialApp(
-            home: Scaffold(
-              body: CountdownTimer(
-                duration: Duration(seconds: 60),
-                elapsedTime: Duration(seconds: 29),
-                stop: true,
-              ),
-            ),
-          ),
+          const CountdownTimer(
+            duration: Duration(seconds: 60),
+            elapsedTime: Duration(seconds: 29),
+            stop: true,
+          ).wrapScaffold().wrapMaterialApp(),
         );
         await tester.pumpAndSettle();
         expect(find.text('00:00:31'), findsOneWidget);
@@ -55,17 +46,13 @@ void main() {
       await runFakeAsync((async) async {
         var onFinishedCalled = false;
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: CountdownTimer(
-                duration: const Duration(seconds: 30),
-                elapsedTime: const Duration(seconds: 20),
-                onFinished: () {
-                  onFinishedCalled = true;
-                },
-              ),
-            ),
-          ),
+          CountdownTimer(
+            duration: const Duration(seconds: 30),
+            elapsedTime: const Duration(seconds: 20),
+            onFinished: () {
+              onFinishedCalled = true;
+            },
+          ).wrapScaffold().wrapMaterialApp(),
         );
         await tester.pumpAndSettle();
         expect(onFinishedCalled, false);

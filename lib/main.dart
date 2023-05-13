@@ -4,6 +4,7 @@ import 'package:ipotato_timer/data/data_source.dart';
 import 'package:ipotato_timer/widget/countdown_timer.dart';
 
 void main() {
+  registerDependencies();
   runApp(const MyApp());
 }
 
