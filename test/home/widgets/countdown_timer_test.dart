@@ -1,8 +1,8 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ipotato_timer/widget/countdown_timer.dart';
+import 'package:ipotato_timer/home/widgets/countdown_timer.dart';
 
-import '../test_helper.dart';
+import '../../test_helper.dart';
 
 void main() {
   group('Countdown Timer', () {

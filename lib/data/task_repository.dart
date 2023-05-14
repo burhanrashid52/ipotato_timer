@@ -1,5 +1,4 @@
 import 'package:clock/clock.dart';
-import 'package:get_it/get_it.dart';
 import 'package:ipotato_timer/data/data_source.dart';
 
 class TaskRepository {

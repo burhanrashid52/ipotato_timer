@@ -1,5 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:ipotato_timer/app_constants.dart';
+import 'package:ipotato_timer/util/app_constants.dart';
 
 class SoundManager {
   final AudioPlayer audioPlayer = AudioPlayer();

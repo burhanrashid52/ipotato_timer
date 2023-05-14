@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ipotato_timer/data/data_source.dart';
-import 'package:ipotato_timer/sound_manager.dart';
-import 'package:ipotato_timer/task_list_page.dart';
+import 'package:ipotato_timer/home/task_list_page.dart';
+import 'package:ipotato_timer/util/sound_manager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         ),
         buttonTheme: ButtonThemeData(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20), // Change the corner size
+            borderRadius: BorderRadius.circular(20),
           ),
           buttonColor: tertiaryContainer,
         ),
@@ -48,26 +48,6 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const TaskListPage(),
-    );
-  }
-}
-
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset('assets/app_icon.png'),
-          const SizedBox(height: 16.0),
-          Image.asset('assets/app_title.png'),
-        ],
-      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ipotato_timer/extension.dart';
+import 'package:ipotato_timer/util/app_extension.dart';
 
 class CountdownTimer extends StatefulWidget {
   final Duration duration;

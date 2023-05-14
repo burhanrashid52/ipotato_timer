@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ipotato_timer/add_task.dart';
+import 'package:ipotato_timer/add_task/add_task.dart';
 import 'package:ipotato_timer/data/data_source.dart';
 import 'package:ipotato_timer/main.dart';
 
-import 'test_helper.dart';
+import '../test_helper.dart';
 
 void main() {
   setUpAll(() {
