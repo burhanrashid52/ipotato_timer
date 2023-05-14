@@ -52,7 +52,6 @@ class TaskRepository {
         await _dataSource.updateTask(id, elapsed: duration.inMilliseconds);
         return duration;
       }
-      //TODO: Handle errors on UI
       throw 'Cannot pause task that has not been started';
     }
     throw 'Task not found';

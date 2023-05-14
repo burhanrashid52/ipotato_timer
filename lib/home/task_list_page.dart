@@ -165,7 +165,12 @@ class TaskTimerToggle extends StatelessWidget {
           _buildIconButton(
             context,
             Icons.pause,
-            () => repository.pauseTask(task.id),
+            () => repository.pauseTask(task.id).onError(
+              (error, _) {
+                context.showSnackBar(error.toString());
+                return Duration.zero;
+              },
+            ),
           ),
         ] else ...[
           _buildIconButton(
