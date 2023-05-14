@@ -1,35 +1,20 @@
 import 'package:clock/clock.dart';
-import 'package:ipotato_timer/data/drift_tables.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Task {
-  final int id;
-  final String title;
-  final Duration duration;
-  final String? description;
-  final DateTime? startedAt;
-  final Duration elapsedDuration;
+part 'task.freezed.dart';
 
-  factory Task.fromTable(TaskTable table) {
-    return Task(
-      id: table.id,
-      title: table.title,
-      description: table.description,
-      duration: Duration(milliseconds: table.duration),
-      elapsedDuration: Duration(milliseconds: table.elapsedDuration ?? 0),
-      startedAt: table.startedAt > 0
-          ? DateTime.fromMillisecondsSinceEpoch(table.startedAt)
-          : null,
-    );
-  }
+@freezed
+class Task with _$Task {
+  const Task._();
 
-  Task({
-    required this.id,
-    required this.title,
-    required this.duration,
-    this.description,
-    this.startedAt,
-    this.elapsedDuration = Duration.zero,
-  });
+  const factory Task({
+    required int id,
+    required String title,
+    required Duration duration,
+    String? description,
+    DateTime? startedAt,
+    @Default(Duration.zero) Duration elapsedDuration,
+  }) = _Task;
 
   bool get isFinished => totalElapsed.inSeconds >= duration.inSeconds;
 

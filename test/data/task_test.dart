@@ -1,9 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ipotato_timer/data/data_source.dart';
 
 import '../test_helper.dart';
 
 void main() {
-  final taskBuilder = TaskDataBuilder(
+  const defaultTask = Task(
     id: 0,
     title: 'T1',
     description: 'D1',
@@ -13,10 +14,10 @@ void main() {
     test(
       'Return isFinished true when elapsed time is more than given duration',
       () {
-        final task = taskBuilder
-            .duration(const Duration(seconds: 5))
-            .elapsedDuration(const Duration(seconds: 6))
-            .build();
+        final task = defaultTask.copyWith(
+          duration: const Duration(seconds: 5),
+          elapsedDuration: const Duration(seconds: 6),
+        );
         expect(task.isFinished, true);
       },
     );
@@ -24,10 +25,10 @@ void main() {
     test(
       'Return isFinished false when elapsed time is less than given duration',
       () {
-        final task = taskBuilder
-            .duration(const Duration(seconds: 5))
-            .elapsedDuration(const Duration(seconds: 4))
-            .build();
+        final task = defaultTask.copyWith(
+          duration: const Duration(seconds: 5),
+          elapsedDuration: const Duration(seconds: 4),
+        );
         expect(task.isFinished, false);
       },
     );
@@ -35,10 +36,10 @@ void main() {
     test(
       'Return isFinished true when elapsed time is equal to duration',
       () {
-        final task = taskBuilder
-            .duration(const Duration(seconds: 5))
-            .elapsedDuration(const Duration(seconds: 5))
-            .build();
+        final task = defaultTask.copyWith(
+          duration: const Duration(seconds: 5),
+          elapsedDuration: const Duration(seconds: 5),
+        );
         expect(task.isFinished, true);
       },
     );
@@ -46,28 +47,30 @@ void main() {
     test(
       'Return isRunning true when we have started time and not finished',
       () {
-        final task = taskBuilder
-            .duration(const Duration(seconds: 5))
-            .startedAt(DateTime.now())
-            .build();
+        final task = defaultTask.copyWith(
+          duration: const Duration(seconds: 5),
+          startedAt: DateTime.now(),
+        );
         expect(task.isRunning, true);
       },
     );
     test(
       'Return isRunning false when we do not have started time',
       () {
-        final task = taskBuilder.duration(const Duration(seconds: 5)).build();
+        final task = defaultTask.copyWith(
+          duration: const Duration(seconds: 5),
+        );
         expect(task.isRunning, false);
       },
     );
     test(
       'Return isRunning false when we have started time but finished',
       () {
-        final task = taskBuilder
-            .duration(const Duration(seconds: 5))
-            .startedAt(DateTime.now())
-            .elapsedDuration(const Duration(seconds: 5))
-            .build();
+        final task = defaultTask.copyWith(
+          duration: const Duration(seconds: 5),
+          startedAt: DateTime.now(),
+          elapsedDuration: const Duration(seconds: 5),
+        );
         expect(task.isRunning, false);
       },
     );
@@ -75,20 +78,20 @@ void main() {
 
   group('Total Elapsed duration', () {
     test('Return elapsed duration when no start time found', () {
-      final task = taskBuilder
-          .duration(const Duration(seconds: 5))
-          .elapsedDuration(const Duration(seconds: 2))
-          .build();
+      final task = defaultTask.copyWith(
+        duration: const Duration(seconds: 5),
+        elapsedDuration: const Duration(seconds: 2),
+      );
 
       expect(task.totalElapsed, const Duration(seconds: 2));
     });
     test('Return total elapsed duration when start time found', () {
       runFakeClock(DateTime(2022, 5, 13, 8, 55), () {
-        final task = taskBuilder
-            .duration(const Duration(minutes: 10))
-            .elapsedDuration(const Duration(minutes: 2))
-            .startedAt(DateTime(2022, 5, 13, 8, 51))
-            .build();
+        final task = defaultTask.copyWith(
+          duration: const Duration(minutes: 10),
+          elapsedDuration: const Duration(minutes: 2),
+          startedAt: DateTime(2022, 5, 13, 8, 51),
+        );
         expect(task.totalElapsed, const Duration(minutes: 6));
       });
     });

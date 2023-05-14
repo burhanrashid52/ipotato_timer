@@ -2,7 +2,6 @@ import 'package:clock/clock.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ipotato_timer/data/data_source.dart';
 
 extension WidgetExt on Widget {
   Widget wrapMaterialApp() {
@@ -10,6 +9,7 @@ extension WidgetExt on Widget {
       home: this,
     );
   }
+
   Widget wrapScaffold() {
     return Scaffold(
       body: this,
@@ -26,106 +26,6 @@ extension WidgetTesterExt on WidgetTester {
   Future<void> enterTextKey(String fieldKey, String givenText) async {
     await enterText(find.byKey(ValueKey(fieldKey)), givenText);
     await pumpAndSettle();
-  }
-}
-
-class TaskDataBuilder {
-  final int _id;
-  final String _title;
-  final String? _description;
-  final Duration? _duration;
-  final Duration? _elapsedDuration;
-  final DateTime? _startedAt;
-
-  TaskDataBuilder({
-    int id = 0,
-    String title = '',
-    String? description,
-    Duration? duration,
-    Duration? elapsedDuration,
-    DateTime? startedAt,
-  })  : _id = id,
-        _title = title,
-        _description = description,
-        _duration = duration,
-        _elapsedDuration = elapsedDuration,
-        _startedAt = startedAt;
-
-  TaskDataBuilder id(int id) {
-    return TaskDataBuilder(
-      id: id,
-      title: _title,
-      description: _description,
-      duration: _duration,
-      elapsedDuration: _elapsedDuration,
-      startedAt: _startedAt,
-    );
-  }
-
-  TaskDataBuilder title(String title) {
-    return TaskDataBuilder(
-      id: _id,
-      title: title,
-      description: _description,
-      duration: _duration,
-      elapsedDuration: _elapsedDuration,
-      startedAt: _startedAt,
-    );
-  }
-
-  TaskDataBuilder description(String description) {
-    return TaskDataBuilder(
-      id: _id,
-      title: _title,
-      description: description,
-      duration: _duration,
-      elapsedDuration: _elapsedDuration,
-      startedAt: _startedAt,
-    );
-  }
-
-  TaskDataBuilder duration(Duration duration) {
-    return TaskDataBuilder(
-      id: _id,
-      title: _title,
-      description: _description,
-      duration: duration,
-      elapsedDuration: _elapsedDuration,
-      startedAt: _startedAt,
-    );
-  }
-
-  TaskDataBuilder elapsedDuration(Duration elapsedDuration) {
-    return TaskDataBuilder(
-      id: _id,
-      title: _title,
-      description: _description,
-      duration: _duration,
-      elapsedDuration: elapsedDuration,
-      startedAt: _startedAt,
-    );
-  }
-
-  TaskDataBuilder startedAt(DateTime startedAt) {
-    return TaskDataBuilder(
-      id: _id,
-      title: _title,
-      description: _description,
-      duration: _duration,
-      elapsedDuration: _elapsedDuration,
-      startedAt: startedAt,
-    );
-  }
-
-  Task build() {
-    return Task(
-      id: _id,
-      title: _title,
-      description: _description,
-      duration: _duration ?? Duration.zero,
-      elapsedDuration: _elapsedDuration ?? Duration.zero,
-      startedAt: _startedAt,
-    );
   }
 }
 

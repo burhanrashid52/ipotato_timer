@@ -9,11 +9,11 @@ class LocalDataSource {
   LocalDataSource(this._db);
 
   Stream<List<Task>> watchTasks() => _selectTask.watch().map(
-        (items) => items.map(Task.fromTable).toList(),
+        (items) => items.map(_taskFromTable).toList(),
       );
 
   Future<List<Task>> getTasks() async {
-    return await _selectTask.map(Task.fromTable).get();
+    return await _selectTask.map(_taskFromTable).get();
   }
 
   SimpleSelectStatement<$TasksTable, TaskTable> get _selectTask =>
@@ -51,7 +51,20 @@ class LocalDataSource {
 
   Future<Task?> getTask(int id) {
     final query = _selectTask..where((t) => t.id.equals(id));
-    final result = query.map(Task.fromTable);
+    final result = query.map(_taskFromTable);
     return result.getSingleOrNull();
   }
+}
+
+Task _taskFromTable(TaskTable table) {
+  return Task(
+    id: table.id,
+    title: table.title,
+    description: table.description,
+    duration: Duration(milliseconds: table.duration),
+    elapsedDuration: Duration(milliseconds: table.elapsedDuration ?? 0),
+    startedAt: table.startedAt > 0
+        ? DateTime.fromMillisecondsSinceEpoch(table.startedAt)
+        : null,
+  );
 }
