@@ -54,24 +54,36 @@ class MyApp extends StatelessWidget {
 
   ThemeData _buildAppThemeData() {
     const primaryColor = Color(0xFF006782);
+    const primaryContainer = Color(0xFFB6EAFF);
+    const onPrimaryContainer = Color(0xFF001F2A);
     const secondaryColor = Color(0xFF216C2E);
     const tertiaryContainer = Color(0xFFE1DFFF);
+    const tertiary = Color(0xFF5B5B7D);
+    const white = Color(0xFFFFFFFF);
+    final surface = primaryColor.withOpacity(0.05);
+    var colorScheme = ColorScheme.fromSwatch(
+      primarySwatch: Colors.green,
+      cardColor: surface,
+    );
     return ThemeData(
       primaryColor: primaryColor,
       secondaryHeaderColor: secondaryColor,
       appBarTheme: const AppBarTheme(
         backgroundColor: secondaryColor,
       ),
-      colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: Colors.green,
-        cardColor: const Color(0xFFFBFCFE),
-      ).copyWith(
-        tertiary: const Color(0xFF5B5B7D),
+      colorScheme: colorScheme.copyWith(
+        tertiary: tertiary,
         tertiaryContainer: tertiaryContainer,
-        surface: const Color(0xFFFBFCFE),
+        surface: surface,
         primary: primaryColor,
+        primaryContainer: primaryContainer,
+        onPrimaryContainer: onPrimaryContainer,
         secondary: secondaryColor,
-        onSecondary: const Color(0xFFFFFFFF),
+        onSecondary: white,
+        background: surface,
+      ),
+      cardTheme: CardTheme(
+        color: surface,
       ),
       buttonTheme: ButtonThemeData(
         shape: RoundedRectangleBorder(
@@ -80,7 +92,8 @@ class MyApp extends StatelessWidget {
         buttonColor: tertiaryContainer,
       ),
       iconTheme: const IconThemeData(
-        size: 18,
+        size: 24,
+        color: white,
       ),
     );
   }

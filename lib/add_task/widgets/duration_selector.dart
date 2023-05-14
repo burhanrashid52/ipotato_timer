@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ipotato_timer/util/app_extension.dart';
 
 class DurationSelector extends StatefulWidget {
   const DurationSelector({
@@ -27,21 +28,23 @@ class _DurationSelectorState extends State<DurationSelector> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildDurationField('HH', _hoursController),
-        const SizedBox(
+        SizedBox(
           width: 32,
           height: 32,
           child: Text(
             " : ",
             textAlign: TextAlign.center,
+            style: context.theme.textTheme.titleSmall,
           ),
         ),
         _buildDurationField('MM', _minutesController),
-        const SizedBox(
+        SizedBox(
           width: 32,
           height: 32,
           child: Text(
             " : ",
             textAlign: TextAlign.center,
+            style: context.theme.textTheme.titleSmall,
           ),
         ),
         _buildDurationField('SS', _secondsController),
@@ -51,28 +54,38 @@ class _DurationSelectorState extends State<DurationSelector> {
 
   Widget _buildDurationField(String label, TextEditingController controller) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 50,
-          child: TextField(
-            key: ValueKey('text_field_$label'),
-            controller: controller,
-            keyboardType: TextInputType.number,
-            textAlign: TextAlign.center,
-            inputFormatters: [
-              _DurationRangeFormatter(),
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
+          width: 65,
+          height: 65,
+          child: Center(
+            child: TextField(
+              key: ValueKey('text_field_$label'),
+              controller: controller,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                _DurationRangeFormatter(),
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              decoration: InputDecoration(
+                fillColor: context.theme.colorScheme.secondaryContainer,
+                filled: true,
+                isDense: true,
+                border: InputBorder.none,
+              ),
+              textAlign: TextAlign.center,
+              style: context.theme.textTheme.headlineMedium,
+              onChanged: (_) => widget.onDurationChanged(_buildDuration()),
             ),
-            onChanged: (_) => widget.onDurationChanged(_buildDuration()),
           ),
         ),
         const SizedBox(height: 8),
-        Text(label),
+        Text(
+          label,
+          style: context.theme.textTheme.titleMedium,
+        ),
       ],
     );
   }

@@ -63,7 +63,6 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final child = Card(
-      color: context.theme.colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -100,7 +99,7 @@ class TaskCard extends StatelessWidget {
           if (task.isFinished) ...[
             const SizedBox(height: 4.0),
             MaterialButton(
-              color: context.theme.colorScheme.onTertiaryContainer,
+              color: context.theme.colorScheme.tertiaryContainer,
               child: const Text('MARK COMPLETE'),
               onPressed: () => repository.deleteTask(task.id),
             ),
@@ -198,14 +197,13 @@ class TaskTimerToggle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
-        width: 24.0,
-        height: 24.0,
+        width: 32.0,
+        height: 32.0,
         decoration: BoxDecoration(
           color: context.theme.colorScheme.tertiary,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: IconButton(
-          color: context.theme.colorScheme.surface,
           padding: EdgeInsets.zero,
           icon: Icon(iconData),
           onPressed: onPressed,
@@ -256,11 +254,13 @@ class AddTaskFloatingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final child = FloatingActionButton.large(
+      backgroundColor: context.theme.colorScheme.primaryContainer,
       onPressed: () => AddTaskPage.launchDialog(context),
       tooltip: 'Add task',
-      child: const Icon(
+      child: Icon(
         Icons.add_circle_outline,
         size: 48,
+        color: context.theme.colorScheme.onPrimaryContainer,
       ),
     );
     if (showHint) {

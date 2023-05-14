@@ -11,8 +11,11 @@ class AddTaskPage extends StatefulWidget {
   static Future<void> launchDialog(BuildContext context) {
     return showDialog(
       context: context,
-      builder: (_) => const Dialog(
-        child: AddTaskPage(),
+      builder: (_) => const Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Dialog(
+          child: AddTaskPage(),
+        ),
       ),
     );
   }
@@ -30,6 +33,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Material(
+        color: context.theme.colorScheme.surface,
         child: IntrinsicHeight(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -37,7 +41,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Text(
+                      'Add Task',
+                      style: context.theme.textTheme.headlineLarge,
+                    ),
+                    const SizedBox(height: 16),
                     TextField(
                       key: const ValueKey('text_field_title'),
                       decoration: const InputDecoration(
@@ -61,7 +71,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           setState(() => _description = value),
                     ),
                     const SizedBox(height: 32),
-                    const Text('Duration'),
+                    Text(
+                      'Duration',
+                      style: context.theme.textTheme.titleMedium,
+                    ),
                     const SizedBox(height: 8),
                     DurationSelector(
                       onDurationChanged: (value) =>
@@ -72,6 +85,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               const SizedBox(height: 16),
               MaterialButton(
+                key: const ValueKey('btn_add_task'),
+                color: context.theme.colorScheme.tertiaryContainer,
                 onPressed: () {
                   final task = _buildTask();
                   final (:isValid, :errMsg) = repository.validate(task);

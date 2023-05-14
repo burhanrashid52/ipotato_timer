@@ -1,4 +1,5 @@
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ipotato_timer/add_task/add_task.dart';
 import 'package:ipotato_timer/data/data_source.dart';
@@ -26,7 +27,8 @@ void main() {
             const AddTaskPage().wrapScaffold().wrapMaterialApp(),
           );
           await tester.pumpAndSettle();
-          await tester.tapOnText('Add Task');
+          await tester.tap(find.byKey(const ValueKey('btn_add_task')));
+          await tester.pumpAndSettle();
           expect(find.text('Title cannot be empty'), findsOneWidget);
         });
       },
@@ -41,7 +43,8 @@ void main() {
           );
           await tester.pumpAndSettle();
           await tester.enterTextKey('text_field_title', 'Task 1');
-          await tester.tapOnText('Add Task');
+          await tester.tap(find.byKey(const ValueKey('btn_add_task')));
+          await tester.pumpAndSettle();
           expect(find.text('Duration cannot be 0'), findsOneWidget);
         });
       },
@@ -59,7 +62,8 @@ void main() {
           await tester.enterTextKey('text_field_description', 'Description 1');
           await tester.enterTextKey('text_field_SS', '10');
 
-          await tester.tapOnText('Add Task');
+          await tester.tap(find.byKey(const ValueKey('btn_add_task')));
+          await tester.pumpAndSettle();
 
           final result = await repository.watchTasks().first;
           expect(result.first.title, 'Task 1');
