@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'drift_tables.dart';
+part of '../drift_tables.dart';
 
 // ignore_for_file: type=lint
 class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskTable> {

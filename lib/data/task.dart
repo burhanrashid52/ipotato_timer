@@ -1,7 +1,8 @@
 import 'package:clock/clock.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ipotato_timer/util/app_extension.dart';
 
-part 'task.freezed.dart';
+part 'generated/task.freezed.dart';
 
 @freezed
 class Task with _$Task {
@@ -25,7 +26,6 @@ class Task with _$Task {
       return elapsedDuration;
     }
     final diff = clock.now().difference(startedAt!);
-    final milliseconds = diff.inMilliseconds + elapsedDuration.inMilliseconds;
-    return Duration(milliseconds: milliseconds);
+    return diff.add(elapsedDuration);
   }
 }

@@ -5,7 +5,7 @@ import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-part 'drift_tables.g.dart';
+part 'generated/drift_tables.g.dart';
 
 const DATABASE_VERSION = 1;
 

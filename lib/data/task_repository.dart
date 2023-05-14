@@ -1,5 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:ipotato_timer/data/data_source.dart';
+import 'package:ipotato_timer/util/app_extension.dart';
 
 class TaskRepository {
   final LocalDataSource _localDataSource;
@@ -59,9 +60,8 @@ class TaskRepository {
 
   Duration _getTotalElapsedDuration(Task task) {
     final currentElapsed = clock.now().difference(task.startedAt!);
-    final prevElapsed = task.elapsedDuration.inMilliseconds;
-    final totalElapsed = currentElapsed.inMilliseconds + prevElapsed;
-    return Duration(milliseconds: totalElapsed);
+    final prevElapsed = task.elapsedDuration;
+    return currentElapsed.add(prevElapsed);
   }
 
   Future<int> deleteTask(int id) {
