@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ipotato_timer/add_task/add_task.dart';
 import 'package:ipotato_timer/data/data_source.dart';
-import 'package:ipotato_timer/home/widgets/countdown_timer.dart';
 import 'package:ipotato_timer/home/splash_screen.dart';
+import 'package:ipotato_timer/home/widgets/countdown_timer.dart';
 import 'package:ipotato_timer/main.dart';
 import 'package:ipotato_timer/util/app_extension.dart';
 
@@ -60,7 +60,7 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    final child = Card(
       color: context.theme.colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -106,6 +106,30 @@ class TaskCard extends StatelessWidget {
         ],
       ),
     );
+    if (task.isFinished) {
+      return Dismissible(
+        key: ValueKey(task.id),
+        direction: DismissDirection.endToStart,
+        onDismissed: (DismissDirection direction) {
+          if (direction == DismissDirection.endToStart) {
+            repository.deleteTask(task.id);
+          }
+        },
+        background: const Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.all(31.0),
+            child: Icon(
+              Icons.delete,
+              size: 32,
+              color: Colors.red,
+            ),
+          ),
+        ),
+        child: child,
+      );
+    }
+    return child;
   }
 }
 
