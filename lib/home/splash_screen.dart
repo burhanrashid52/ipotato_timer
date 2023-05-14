@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ipotato_timer/util/app_constants.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -18,12 +19,12 @@ class SplashScreen extends StatelessWidget {
               AspectRatio(
                 aspectRatio: screenSize.width / (screenSize.height / 3),
                 child: Image.asset(
-                  'assets/app_icon.png',
+                  Assets.appIconImage,
                 ),
               ),
               const SizedBox(height: 32.0),
               Image.asset(
-                'assets/app_title.png',
+                Assets.appTitleImage,
                 width: screenSize.width / 1.25,
               ),
             ],
