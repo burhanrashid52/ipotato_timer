@@ -55,16 +55,17 @@ Future<T> runFakeAsync<T>(
 }
 
 class FakeTaskRepository extends Fake implements TaskRepository {
-  final List<Task>? fakeTasksStream;
+  final Stream<List<Task>>? fakeTasksStream;
+  final Object? fakeStreamError;
 
-  FakeTaskRepository({this.fakeTasksStream});
+  FakeTaskRepository({this.fakeTasksStream, this.fakeStreamError});
 
   var deletedTaskId = -1;
   var startedTaskId = -1;
   var pausedTaskId = -1;
 
   @override
-  Stream<List<Task>> watchTasks() => Stream.value(fakeTasksStream ?? []);
+  Stream<List<Task>> watchTasks() => fakeTasksStream ?? Stream.value([]);
 
   @override
   Future<int> deleteTask(int id) async {

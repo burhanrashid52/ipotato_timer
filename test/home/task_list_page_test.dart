@@ -19,12 +19,13 @@ void main() {
       (tester) async {
         getIt.registerSingleton<TaskRepository>(
           FakeTaskRepository(
-            fakeTasksStream: [
+              fakeTasksStream: Stream.value(
+            [
               defaultTask.copyWith(
                 elapsedDuration: const Duration(seconds: 30),
               ),
             ],
-          ),
+          )),
         );
         await tester.pumpWidget(
           const TaskListPage().wrapScaffold().wrapMaterialApp(),
@@ -41,13 +42,13 @@ void main() {
       (tester) async {
         getIt.registerSingleton<TaskRepository>(
           FakeTaskRepository(
-            fakeTasksStream: [
+            fakeTasksStream: Stream.value([
               defaultTask.copyWith(
                 description: 'D1',
                 elapsedDuration: const Duration(seconds: 15),
                 startedAt: DateTime.now(),
               ),
-            ],
+            ]),
           ),
         );
         await tester.pumpWidget(
@@ -82,13 +83,13 @@ void main() {
       'Delete task on swipe',
       (tester) async {
         final fakeRepo = FakeTaskRepository(
-          fakeTasksStream: [
+          fakeTasksStream: Stream.value([
             defaultTask.copyWith(
               description: 'D1',
               duration: const Duration(seconds: 15),
               elapsedDuration: const Duration(seconds: 15),
             ),
-          ],
+          ]),
         );
         getIt.registerSingleton<TaskRepository>(fakeRepo);
 
