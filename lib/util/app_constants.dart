@@ -3,4 +3,5 @@ class Assets {
   static const soundWaveImage = 'assets/images/sound_wave.png';
   static const appIconImage = 'assets/images/app_icon.png';
   static const appTitleImage = 'assets/images/app_title.png';
+  static const arrowDownImage = 'assets/images/arrow_down.png';
 }

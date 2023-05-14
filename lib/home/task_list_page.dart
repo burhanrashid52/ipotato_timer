@@ -13,40 +13,41 @@ class TaskListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Potato Timer',
-          style: context.theme.textTheme.headlineLarge,
-        ),
-      ),
-      body: StreamBuilder<List<Task>>(
-        stream: repository.watchTasks(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final tasks = snapshot.data!;
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.separated(
-                itemCount: tasks.length,
-                itemBuilder: (context, index) {
-                  final task = tasks[index];
-                  return TaskCard(task: task);
-                },
-                separatorBuilder: (_, int index) => const SizedBox(height: 20),
-              ),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
+    return StreamBuilder<List<Task>>(
+      stream: repository.watchTasks(),
+      builder: (context, snapshot) {
+        List<Task> tasks = [];
+        Widget body = const Center(child: CircularProgressIndicator());
+
+        if (snapshot.hasData) {
+          tasks = snapshot.data!;
+          body = Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.separated(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                final task = tasks[index];
+                return TaskCard(task: task);
+              },
+              separatorBuilder: (_, int index) => const SizedBox(height: 20),
+            ),
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => AddTaskPage.launchDialog(context),
-        tooltip: 'Add task',
-        child: const Icon(Icons.add_circle_outline),
-      ),
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Potato Timer',
+              style: context.theme.textTheme.headlineLarge?.copyWith(
+                color: context.theme.colorScheme.onSecondary,
+              ),
+            ),
+          ),
+          body: body,
+          floatingActionButton: AddTaskFloatingButton(
+            showHint: tasks.isEmpty,
+          ),
+        );
+      },
     );
   }
 }
@@ -241,5 +242,56 @@ class TaskFinished extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class AddTaskFloatingButton extends StatelessWidget {
+  const AddTaskFloatingButton({
+    super.key,
+    this.showHint = false,
+  });
+
+  final bool showHint;
+
+  @override
+  Widget build(BuildContext context) {
+    final child = FloatingActionButton.large(
+      onPressed: () => AddTaskPage.launchDialog(context),
+      tooltip: 'Add task',
+      child: const Icon(
+        Icons.add_circle_outline,
+        size: 48,
+      ),
+    );
+    if (showHint) {
+      return Stack(
+        children: [
+          Align(
+            alignment: Alignment.bottomRight,
+            child: child,
+          ),
+          Positioned(
+            right: 16,
+            bottom: 108,
+            child: SizedBox(
+              child: Row(
+                children: [
+                  Text(
+                    'No timers active.\nPress here to start a new one',
+                    style: context.theme.textTheme.bodyMedium,
+                  ),
+                  const SizedBox(width: 32.0),
+                  Image.asset(
+                    Assets.arrowDownImage,
+                    width: 100,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return child;
   }
 }

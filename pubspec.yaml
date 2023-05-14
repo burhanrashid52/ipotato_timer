@@ -42,6 +42,7 @@ flutter:
     - assets/images/sound_wave.png
     - assets/images/app_icon.png
     - assets/images/app_title.png
+    - assets/images/arrow_down.png
     - assets/sounds/bell.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
