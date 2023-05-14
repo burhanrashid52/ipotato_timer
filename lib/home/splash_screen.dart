@@ -5,16 +5,30 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset('assets/app_icon.png'),
-          const SizedBox(height: 16.0),
-          Image.asset('assets/app_title.png'),
-        ],
+    final screenSize = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: null,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AspectRatio(
+                aspectRatio: screenSize.width / (screenSize.height / 3),
+                child: Image.asset(
+                  'assets/app_icon.png',
+                ),
+              ),
+              const SizedBox(height: 32.0),
+              Image.asset(
+                'assets/app_title.png',
+                width: screenSize.width / 1.25,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

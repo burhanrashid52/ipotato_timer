@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ipotato_timer/add_task/add_task.dart';
 import 'package:ipotato_timer/data/data_source.dart';
-import 'package:ipotato_timer/home/splash_screen.dart';
 import 'package:ipotato_timer/home/widgets/countdown_timer.dart';
 import 'package:ipotato_timer/main.dart';
 import 'package:ipotato_timer/util/app_extension.dart';
@@ -36,9 +35,10 @@ class TaskListPage extends StatelessWidget {
                 separatorBuilder: (_, int index) => const SizedBox(height: 20),
               ),
             );
-          } else {
-            return const SplashScreen();
           }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
