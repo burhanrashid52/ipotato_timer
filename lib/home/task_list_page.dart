@@ -44,7 +44,7 @@ class TaskListPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => AddTaskPage.launchDialog(context),
         tooltip: 'Add task',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_circle_outline),
       ),
     );
   }
