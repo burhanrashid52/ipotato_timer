@@ -62,6 +62,7 @@ class _DurationSelectorState extends State<DurationSelector> {
             textAlign: TextAlign.center,
             inputFormatters: [
               _DurationRangeFormatter(),
+              FilteringTextInputFormatter.digitsOnly,
             ],
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
