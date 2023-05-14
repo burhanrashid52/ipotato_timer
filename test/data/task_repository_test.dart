@@ -146,6 +146,24 @@ void main() {
       final id = await repo.deleteTask(42);
       expect(id, 0);
     });
+
+    test(
+        'Return started at 0 and elapsed duration when task is mark as finished',
+        () async {
+      final repo = TaskRepository(localDataSource);
+      final id = await localDataSource.addTask(
+        defaultTask.copyWith(
+          duration: const Duration(seconds: 50),
+          elapsedDuration: const Duration(seconds: 5),
+          startedAt: DateTime.now(),
+        ),
+      );
+
+      await repo.markAsFinished(id, const Duration(seconds: 10));
+      final tasks = await localDataSource.getTasks();
+      expect(tasks.first.startedAt, null);
+      expect(tasks.first.elapsedDuration, const Duration(seconds: 10));
+    });
   });
 
   tearDown(() async {
