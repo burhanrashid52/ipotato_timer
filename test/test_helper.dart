@@ -2,6 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ipotato_timer/data/data_source.dart';
 
 extension WidgetExt on Widget {
   Widget wrapMaterialApp() {
@@ -51,4 +52,13 @@ Future<T> runFakeAsync<T>(
     }
     return future;
   });
+}
+
+class FakeTaskRepository extends Fake implements TaskRepository {
+  final List<Task>? fakeTasksStream;
+
+  FakeTaskRepository({this.fakeTasksStream});
+
+  @override
+  Stream<List<Task>> watchTasks() => Stream.value(fakeTasksStream ?? []);
 }
