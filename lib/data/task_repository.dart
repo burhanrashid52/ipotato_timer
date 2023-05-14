@@ -2,20 +2,6 @@ import 'package:clock/clock.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ipotato_timer/data/data_source.dart';
 
-final _getIt = GetIt.instance;
-
-TaskRepository get repository => _getIt();
-
-void registerDependencies() {
-  _getIt.registerSingleton<TaskRepository>(
-    TaskRepository(
-      LocalDataSource(
-        AppDatabase(),
-      ),
-    ),
-  );
-}
-
 class TaskRepository {
   final LocalDataSource _localDataSource;
 
@@ -79,7 +65,7 @@ class TaskRepository {
     return Duration(milliseconds: totalElapsed);
   }
 
-  Future<int> stopTask(int id) {
+  Future<int> deleteTask(int id) {
     return _localDataSource.removeTask(id);
   }
 

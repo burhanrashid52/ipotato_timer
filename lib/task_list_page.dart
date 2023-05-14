@@ -100,7 +100,7 @@ class TaskCard extends StatelessWidget {
             MaterialButton(
               color: context.theme.colorScheme.onTertiaryContainer,
               child: const Text('MARK COMPLETE'),
-              onPressed: () => repository.stopTask(task.id),
+              onPressed: () => repository.deleteTask(task.id),
             ),
           ],
         ],
@@ -131,10 +131,9 @@ class TaskTimerToggle extends StatelessWidget {
           elapsedTime: task.totalElapsed,
           stop: !task.isRunning,
           onFinished: () {
-            repository.markAsFinished(
-              task.id,
-              task.duration,
-            );
+            repository
+                .markAsFinished(task.id, task.duration)
+                .then((_) => soundManager.playBell());
           },
         ),
         const SizedBox(width: 8.0),
@@ -154,7 +153,7 @@ class TaskTimerToggle extends StatelessWidget {
         _buildIconButton(
           context,
           Icons.stop,
-          () => repository.stopTask(task.id),
+          () => repository.deleteTask(task.id),
         ),
       ],
     );

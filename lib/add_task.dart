@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:ipotato_timer/data/data_source.dart';
+import 'package:ipotato_timer/main.dart';
 import 'package:ipotato_timer/widget/duration_selector.dart';
 
 class AddTaskPage extends StatefulWidget {

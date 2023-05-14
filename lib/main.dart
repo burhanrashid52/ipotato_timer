@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:ipotato_timer/data/data_source.dart';
+import 'package:ipotato_timer/sound_manager.dart';
 import 'package:ipotato_timer/task_list_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   registerDependencies();
   runApp(const MyApp());
 }
@@ -67,4 +70,21 @@ class SplashScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+final getIt = GetIt.instance;
+
+TaskRepository get repository => getIt();
+
+SoundManager get soundManager => getIt();
+
+void registerDependencies() {
+  getIt.registerSingleton(
+    TaskRepository(
+      LocalDataSource(
+        AppDatabase(),
+      ),
+    ),
+  );
+  getIt.registerSingleton(SoundManager());
 }

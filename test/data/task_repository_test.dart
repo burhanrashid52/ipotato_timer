@@ -115,7 +115,7 @@ void main() {
       final beforeTask = await localDataSource.watchTasks().first;
       expect(beforeTask.length, 2);
 
-      final id = await repo.stopTask(id1);
+      final id = await repo.deleteTask(id1);
       expect(id, id1);
 
       final afterTask = await localDataSource.watchTasks().first;
@@ -127,7 +127,7 @@ void main() {
       final repo = TaskRepository(localDataSource);
       await localDataSource.addTask(taskBuilder.build());
 
-      final id = await repo.stopTask(42);
+      final id = await repo.deleteTask(42);
       expect(id, 0);
     });
   });
