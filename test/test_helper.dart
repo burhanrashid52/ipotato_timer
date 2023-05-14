@@ -59,6 +59,27 @@ class FakeTaskRepository extends Fake implements TaskRepository {
 
   FakeTaskRepository({this.fakeTasksStream});
 
+  var deletedTaskId = -1;
+  var startedTaskId = -1;
+  var pausedTaskId = -1;
+
   @override
   Stream<List<Task>> watchTasks() => Stream.value(fakeTasksStream ?? []);
+
+  @override
+  Future<int> deleteTask(int id) async {
+    deletedTaskId = id;
+    return id;
+  }
+
+  @override
+  Future<void> startTask(int id) async {
+    startedTaskId = id;
+  }
+
+  @override
+  Future<Duration> pauseTask(int id) async {
+    pausedTaskId = id;
+    return Duration.zero;
+  }
 }

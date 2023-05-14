@@ -108,7 +108,7 @@ class TaskCard extends StatelessWidget {
     );
     if (task.isFinished) {
       return Dismissible(
-        key: ValueKey(task.id),
+        key: ValueKey('swipe_task_${task.id}'),
         direction: DismissDirection.endToStart,
         onDismissed: (DismissDirection direction) {
           if (direction == DismissDirection.endToStart) {

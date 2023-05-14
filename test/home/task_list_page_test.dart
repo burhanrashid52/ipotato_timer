@@ -77,5 +77,75 @@ void main() {
         expect(find.text('Description'), findsOneWidget);
       },
     );
+
+    testWidgets(
+      'Delete task on swipe',
+      (tester) async {
+        final fakeRepo = FakeTaskRepository(
+          fakeTasksStream: [
+            defaultTask.copyWith(
+              description: 'D1',
+              duration: const Duration(seconds: 15),
+              elapsedDuration: const Duration(seconds: 15),
+            ),
+          ],
+        );
+        getIt.registerSingleton<TaskRepository>(fakeRepo);
+
+        await tester.pumpWidget(
+          const TaskListPage().wrapScaffold().wrapMaterialApp(),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.drag(find.byType(Dismissible), const Offset(-500, 0));
+        await tester.pumpAndSettle();
+
+        expect(fakeRepo.deletedTaskId, 1);
+      },
+    );
+  });
+
+  group('TaskTimerToggle', () {
+    testWidgets('Start task when task is not running', (tester) async {
+      final task = defaultTask.copyWith(
+        description: 'D1',
+        duration: const Duration(seconds: 15),
+      );
+
+      final fakeRepo = FakeTaskRepository();
+      getIt.registerSingleton<TaskRepository>(fakeRepo);
+
+      await tester.pumpWidget(
+        TaskTimerToggle(task: task).wrapScaffold().wrapMaterialApp(),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.play_arrow));
+      await tester.pumpAndSettle();
+
+      expect(fakeRepo.startedTaskId, 1);
+    });
+
+    testWidgets('Pause task when task is running', (tester) async {
+      final task = defaultTask.copyWith(
+        description: 'D1',
+        duration: const Duration(seconds: 15),
+        elapsedDuration: const Duration(seconds: 10),
+        startedAt: DateTime.now(),
+      );
+
+      final fakeRepo = FakeTaskRepository();
+      getIt.registerSingleton<TaskRepository>(fakeRepo);
+
+      await tester.pumpWidget(
+        TaskTimerToggle(task: task).wrapScaffold().wrapMaterialApp(),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.pause));
+      await tester.pumpAndSettle();
+
+      expect(fakeRepo.pausedTaskId, 1);
+    });
   });
 }
