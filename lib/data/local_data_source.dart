@@ -1,17 +1,19 @@
 import 'package:drift/drift.dart';
 import 'package:ipotato_timer/data/drift_tables.dart';
 
-import 'task.dart';
+import 'data_source.dart';
 
-class LocalDataSource {
+class LocalDataSource implements DataSource {
   final AppDatabase _db;
 
   LocalDataSource(this._db);
 
+  @override
   Stream<List<Task>> watchTasks() => _selectTask.watch().map(
         (items) => items.map(_taskFromTable).toList(),
       );
 
+  @override
   Future<List<Task>> getTasks() async {
     return await _selectTask.map(_taskFromTable).get();
   }
@@ -19,6 +21,7 @@ class LocalDataSource {
   SimpleSelectStatement<$TasksTable, TaskTable> get _selectTask =>
       _db.select(_db.tasks);
 
+  @override
   Future<int> addTask(Task task) {
     final taskTable = TasksCompanion.insert(
       title: task.title,
@@ -30,11 +33,13 @@ class LocalDataSource {
     return _db.into(_db.tasks).insert(taskTable);
   }
 
+  @override
   Future<int> removeTask(int id) {
     final taskTable = TasksCompanion(id: Value(id));
     return _db.delete(_db.tasks).delete(taskTable);
   }
 
+  @override
   Future<void> updateTask(
     int id, {
     int startedAt = 0,
@@ -49,6 +54,7 @@ class LocalDataSource {
     return query.write(taskTable);
   }
 
+  @override
   Future<Task?> getTask(int id) {
     final query = _selectTask..where((t) => t.id.equals(id));
     final result = query.map(_taskFromTable);

@@ -3,12 +3,12 @@ import 'package:ipotato_timer/data/data_source.dart';
 import 'package:ipotato_timer/util/app_extension.dart';
 
 class TaskRepository {
-  final LocalDataSource _localDataSource;
+  final DataSource _dataSource;
 
-  TaskRepository(this._localDataSource);
+  TaskRepository(this._dataSource);
 
   Stream<List<Task>> watchTasks() =>
-      _localDataSource.watchTasks().map(_sortTaskByFinish);
+      _dataSource.watchTasks().map(_sortTaskByFinish);
 
   List<Task> _sortTaskByFinish(List<Task> tasks) {
     return tasks
@@ -35,21 +35,21 @@ class TaskRepository {
   }
 
   Future<int> addTask(Task task) {
-    return _localDataSource.addTask(task);
+    return _dataSource.addTask(task);
   }
 
   Future<void> startTask(int id) async {
     final now = clock.now();
     final milliseconds = now.millisecondsSinceEpoch;
-    await _localDataSource.updateTask(id, startedAt: milliseconds);
+    await _dataSource.updateTask(id, startedAt: milliseconds);
   }
 
   Future<Duration> pauseTask(int id) async {
-    final task = await _localDataSource.getTask(id);
+    final task = await _dataSource.getTask(id);
     if (task != null) {
       if (task.startedAt != null) {
         final duration = _getTotalElapsedDuration(task);
-        await _localDataSource.updateTask(id, elapsed: duration.inMilliseconds);
+        await _dataSource.updateTask(id, elapsed: duration.inMilliseconds);
         return duration;
       }
       //TODO: Handle errors on UI
@@ -65,11 +65,11 @@ class TaskRepository {
   }
 
   Future<int> deleteTask(int id) {
-    return _localDataSource.removeTask(id);
+    return _dataSource.removeTask(id);
   }
 
   Future<void> markAsFinished(int id, Duration duration) async {
-    await _localDataSource.updateTask(
+    await _dataSource.updateTask(
       id,
       startedAt: 0,
       elapsed: duration.inMilliseconds,

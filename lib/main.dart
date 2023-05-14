@@ -20,9 +20,7 @@ SoundManager get soundManager => getIt();
 void registerDependencies() {
   getIt.registerSingleton(
     TaskRepository(
-      LocalDataSource(
-        AppDatabase(),
-      ),
+      createLocalDataSource(),
     ),
   );
   getIt.registerSingleton(SoundManager());
